@@ -17,7 +17,7 @@ else
 	GRUB_INSTALL_COMMAND="grub-install --target=i386-pc $TARGET_DISK"
 fi
 
-arch-chroot /mnt/ /bin/bash <<EOF
+arch-chroot /mnt /bin/bash <<EOF
 $GRUB_INSTALL_COMMAND
 grub-mkconfig -o /boot/grub/grub.cfg
 history -c && exit

@@ -1,50 +1,19 @@
 #!/bin/bash
 
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# | | | | | | | | | | | | | | | | | |
+# v v v v v v v v v v v v v v v v v v
+
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/partitioning/schemes/gpt/scheme_1.sh'"
 
 echo "Partitioning as GPT using scheme_1 (EFI + ROOT + HOME)"
 
+# ____________________________________
+# | | | | | | | | | | | | | | | | | | 
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+
 # Funkcije
-is_valid_input() {
-
-	local input="$1"
-
-	# Ako je ulaz prazan
-	if [[ -z "$input" ]]; then
-		return 0
-	fi
-
-	# Validiraj broj ako ima jedan od sufiksa K, M, G, T, P ili ga uopće nema
-	if [[ "$input" =~ ^[0-9]+[KkMmGgTtPp]?$ ]]; then
-		return 0
-	else
-		return 1
-	fi
-
-}
-
-get_input() {
-
-	local input
-	local partition="$1"
-	local size="$2"
-
-	# Pisanje veličina particije
-	while true; do
-		read -p "Enter $partition size [size{K,M,G,T,P}]: " input
-		if is_valid_input "$input"; then
-			if [[ "$input" != "" ]]; then
-				input="+$input"
-			fi
-			break
-		else
-			echo "Invalid input, try again."
-		fi
-	done
-	
-	eval "$size=\"$input\""
-
-}
+source ./partitioning/scheme_functions.sh
 
 # Provjeri je li disk NVME
 TARGET_DISK="$(cat /tmp/archlinux-install-script-files/target_disk.txt)"
@@ -54,6 +23,10 @@ if echo "$TARGET_DISK" | grep -q "nvme"; then
 else
 	APPEND_P=
 fi
+
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# | | | | | | | | | | | | | | | | | |
+# v v v v v v v v v v v v v v v v v v
 
 # Particije
 EFI=1
@@ -81,7 +54,12 @@ while true; do
 	
 	echo -e "\nEFI size: $EFI_SIZE"
 	echo -e "ROOT size: $ROOT_SIZE"
-	echo -e "HOME size:\n $HOME_SIZE"
+	
+	if [[ "$HOME_SIZE" == "" ]]; then
+		echo -e "HOME size: rest of free disk space\n"	
+	else
+		echo -e "HOME size: $HOME_SIZE\n"
+	fi
 
 	read -p "Are you sure that these are your final values? [y/n]: " INPUT_1
 	if [[ "$INPUT_1" == "y" || "$INPUT_1" == "Y" || "$INPUT_1" == "" ]]; then
@@ -92,8 +70,16 @@ done
 
 echo -e "\n***********************************************************\n"
 
-# Ako se odabere prekid, prekini
-check_script_retval "./choice-script/yes_or_no.sh"
+# ____________________________________
+# | | | | | | | | | | | | | | | | | | 
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+
+# Nastavi: Da ili ne?
+choice_yes_or_no
+
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# | | | | | | | | | | | | | | | | | |
+# v v v v v v v v v v v v v v v v v v
 
 echo -e "\n***********************************************************\n"
 
@@ -155,6 +141,13 @@ p
 w
 EOF
 
+# Ako postoji ekriptirana ROOT particija
+ENCRYPTED_ROOT="N"
+touch /tmp/archlinux-install-script-files/crypt_root.txt
+export ENCRYPTED_ROOT
+ENCRYPTED_BOOT="N"
+export ENCRYPTED_BOOT
+
 # Pisanje particija u datoteku
 TARGET_DISK_PARTITIONS_FILE="/tmp/archlinux-install-script-files/target_disk_partitions.txt"
 
@@ -167,7 +160,6 @@ echo "$ROOT_PARTITION_DEV_FILE" | tee -a $TARGET_DISK_PARTITIONS_FILE > /dev/nul
 echo "$HOME_PARTITION_DEV_FILE" | tee -a $TARGET_DISK_PARTITIONS_FILE > /dev/null
 
 # Formatiraj particije
-
 echo -e "Formating partitions ...\n"
 
 echo "Formatting the EFI partition ($EFI_PARTITION_DEV_FILE):" 
@@ -191,11 +183,22 @@ mount --mkdir $HOME_PARTITION_DEV_FILE /mnt/home
 
 echo ""
 
+# ____________________________________
+# | | | | | | | | | | | | | | | | | | 
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+
 lsblk -po NAME,SIZE,TYPE,MOUNTPOINTS $TARGET_DISK
 
-check_script_retval "./system-setup/setup.sh"
+check_script_retval "./system/setup.sh"
 
-umount -R /mnt
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# | | | | | | | | | | | | | | | | | |
+# v v v v v v v v v v v v v v v v v v
 
 debug "SCRIPT '{PROJECT_ROOT}/partitioning/schemes/gpt/scheme_1.sh' FINISHED EXECUTING (CODE: 0)"
+
+# ____________________________________
+# | | | | | | | | | | | | | | | | | | 
+# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+
 exit 0

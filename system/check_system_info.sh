@@ -1,6 +1,6 @@
 #!/bin/bash
 
-debug "EXECUTING SCRIPT '{PROJECT_ROOT}/system-info/check_system.sh'"
+debug "EXECUTING SCRIPT '{PROJECT_ROOT}/system/check_system_info.sh'"
 
 # Piše sustavske specifikacije u datoteku temp/important_specs.txt
 echo -e "\n========================SYSTEM SPECS=======================\n"
@@ -33,5 +33,11 @@ fi
 
 echo ""
 
-debug "SCRIPT '{PROJECT_ROOT}/system-info/check_system.sh' FINISHED EXECUTING (CODE: 0)"
+# Provjera zadovoljava li sustav instalacijska ograničenja
+if [[ "$ARCH" != "x86_64" ]]; then
+	echo "Unsupported architecture: $ARCH, exiting ..."
+	exit 1
+fi
+
+debug "SCRIPT '{PROJECT_ROOT}/system/check_system_info.sh' FINISHED EXECUTING (CODE: 0)"
 exit 0

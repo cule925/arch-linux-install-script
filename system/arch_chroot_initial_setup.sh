@@ -1,6 +1,6 @@
 #!/bin/bash
 
-debug "EXECUTING SCRIPT '{PROJECT_ROOT}/system-setup/basic_settings.sh'"
+debug "EXECUTING SCRIPT '{PROJECT_ROOT}/system/arch_chroot_initial_setup.sh'"
 
 # Čita ./settings.txt
 source ./settings.txt
@@ -72,7 +72,7 @@ done
 
 echo -e "\n========>>>>>>>> ARCH-CHROOT-BASIC-SETTINGS\n"
 
-arch-chroot /mnt/ /bin/bash <<EOF
+arch-chroot /mnt /bin/bash <<EOF
 ln -sf /usr/share/zoneinfo/$REGION/$CITY /etc/localtime
 hwclock --systohc
 sed -i 's/^#\\s*\\($LOCALE_DEFAULT_1\\s$LOCALE_DEFAULT_2\\)/\\1/' /etc/locale.gen
@@ -93,5 +93,5 @@ echo -e "\\n127.0.0.1\\tlocalhost\\n127.0.1.1\\t\$(cat /etc/hostname)\\n::1\\t\\
 history -c && exit
 EOF
 
-debug "SCRIPT '{PROJECT_ROOT}/system-setup/basic_settings.sh' FINISHED EXECUTING (CODE: 0)"
+debug "SCRIPT '{PROJECT_ROOT}/system/arch_chroot_initial_setup.sh' FINISHED EXECUTING (CODE: 0)"
 exit 0

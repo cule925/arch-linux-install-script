@@ -3,15 +3,16 @@
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/partitioning/choose_scheme.sh'"
 
 # Funkcije
-check_scheme() {
+set_partitioning_style() {
 
 	# Ispitaj je li shema treba biti GPT ili MBR 
 	if [[ "$SYSTEM_TYPE" == "UEFI" ]]; then
-		SCHEME=gpt
+		PARTITIONING_STYLE="gpt"
 	else
-		SCHEME=mbr
+		PARTITIONING_STYLE="mbr"
 	fi
-	echo $SCHEME | tee /tmp/archlinux-install-script-files/target_scheme.txt
+	echo "Partitioning style: "
+	echo "$PARTITIONING_STYLE" | tee /tmp/archlinux-install-script-files/partitioning_style.txt
 
 }
 
@@ -37,7 +38,7 @@ is_valid_number() {
 
 # Čita /tmp/archlinux-install-script-files/important_specs.txt
 source /tmp/archlinux-install-script-files/important_specs.txt
-check_scheme
+set_partitioning_style
 
 # Piše disk koji se particionira u /tmp/archlinux-install-script-files/target_disk.txt
 echo -e "\n==============CHOOSE SCHEME FOR PARTITIONING===============\n"
@@ -45,7 +46,7 @@ echo -e "\n==============CHOOSE SCHEME FOR PARTITIONING===============\n"
 # Dok se ne upiše ispravno ime diska ili se ne izađe iz izvođenja
 while true; do
 
-	SCHEME_DESC_FILES=$(ls $WORK_DIR/partitioning/schemes/$SCHEME/descriptions/)
+	SCHEME_DESC_FILES=$(ls $WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/)
 
 	# Broj dostupnih shema
 	SCHEME_NUMBER=$(echo "$SCHEME_DESC_FILES" | wc -w)
@@ -114,7 +115,7 @@ while true; do
 						COUNTER=1
 						for INDEX in $SCHEME_DESC_FILES; do
 
-							FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$SCHEME/descriptions/$INDEX")
+							FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/$INDEX")
 							echo "["$COUNTER"] $FIRST_LINE"
 							((COUNTER++))
 
@@ -134,7 +135,7 @@ while true; do
 							echo -e "\n["$COUNTER"]********************************************************\n"
 							while IFS= read -r LINE; do
 								echo "$LINE"
-							done < $WORK_DIR/partitioning/schemes/$SCHEME/descriptions/$INDEX
+							done < $WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/$INDEX
 							((COUNTER++))
 
 						done
@@ -171,7 +172,7 @@ while true; do
 						# Ispisivanje kratkog opisa jedne shema
 						echo -e "Selected scheme description:"
 						echo -e "\n***********************************************************\n"
-						FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$SCHEME/descriptions/scheme_$INPUT_1.txt")
+						FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/scheme_$INPUT_1.txt")
 						echo "["$INPUT_1"] $FIRST_LINE"
 						echo -e "\n***********************************************************\n"
 
@@ -185,7 +186,7 @@ while true; do
 						echo -e "\n["$INPUT_1"]********************************************************\n"
 						while IFS= read -r LINE; do
 							echo "$LINE"
-						done < $WORK_DIR/partitioning/schemes/$SCHEME/descriptions/scheme_$INPUT_1.txt
+						done < $WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/scheme_$INPUT_1.txt
 						echo -e "\n***********************************************************\n"
 
 					fi
@@ -219,7 +220,7 @@ while true; do
 
 			# Ako je odabir diska validan
 			if is_valid_number "$INPUT_4" "$SCHEME_NUMBER"; then
-				FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$SCHEME/descriptions/scheme_$INPUT_4.txt")
+				FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/scheme_$INPUT_4.txt")
 				echo -e "Target scheme chosen: ["$INPUT_4"] $FIRST_LINE"
 				echo $INPUT_4 | tee /tmp/archlinux-install-script-files/target_scheme_index.txt > /dev/null
 				echo ""

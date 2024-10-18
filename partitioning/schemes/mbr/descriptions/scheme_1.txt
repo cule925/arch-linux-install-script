@@ -1,6 +1,6 @@
 CLEAN MBR DISK WITH ROOT AND HOME PARTITIONS
                         ___________________
-Role:                   |  ROOT  |  HOME  |   [a] remaining space without ROOT
-Filesystem format:      | (EXT4) | (EXT4) |
+Role:                   |  ROOT  |  HOME  |   [a] by choice
+Filesystem format:      | (EXT4) | (EXT4) |   [b] by choice
 Mount point:            |   /    | /home  |
-Occupying space:        |  50%   |  [a]   |
+Occupying space:        |  [a]   |  [b]   |
