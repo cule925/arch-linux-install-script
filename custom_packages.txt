@@ -1,0 +1,1 @@
+ffmpeg qemu-full edk2-ovmf

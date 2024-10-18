@@ -1,0 +1,7 @@
+CLEAN MBR DISK WITH ROOT
+                        __________          
+Role:                   |  ROOT  |
+Filesystem format:      | (EXT4) |    
+Mount point:            |   /    |
+Occupying space:        |  100%  |
+

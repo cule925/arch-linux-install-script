@@ -1,0 +1,6 @@
+CLEAN GPT DISK WITH EFI AND ROOT
+                        ____________________
+Role:                   |   EFI   |  ROOT  |   [a] remaining space without EFI
+Filesystem format:      | (FAT32) | (EXT4) |
+Mount point:            |  /efi/  |   /    |
+Occupying space:        |  512M   |  [a]   |

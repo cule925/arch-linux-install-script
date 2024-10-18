@@ -1,0 +1,1 @@
+vim nano networkmanager git man-db htop fastfetch wget curl cmake zip unzip bluez bluez-utils usbutils lsof net-tools inetutils nmap dhclient

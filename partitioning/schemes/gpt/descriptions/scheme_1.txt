@@ -1,0 +1,6 @@
+CLEAN GPT DISK WITH EFI, ROOT AND HOME PARTITIONS
+			_____________________________
+Role:			|   EFI   |  ROOT  |  HOME  |   [a] by choice
+Filesystem format:	| (FAT32) | (EXT4) | (EXT4) |   [b] by choice
+Mount point:		|  /efi/  |   /    | /home  |
+Occupying space:	|  512M   |  [a]   |  [b]   |
