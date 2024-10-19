@@ -1,0 +1,6 @@
+CLEAN GPT DISK WITH EFI AND ENCRYPTED ROOT PARTITIONS
+			_____________________
+Role:			|   EFI   |  ROOT   |   [a] by choice
+Filesystem format:	| (FAT32) | (LUKS2) |
+Mount point:		|  /efi/  |    /    |
+Occupying space:	|  512M   |   [a]   |

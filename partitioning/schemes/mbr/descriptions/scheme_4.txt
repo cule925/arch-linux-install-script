@@ -1,0 +1,6 @@
+CLEAN MBR DISK WITH ENCRYPTED ROOT PARTITION
+                        ___________
+Role:                   |  ROOT   |   [a] by choice
+Filesystem format:      | (LUKS2) |
+Mount point:            |    /    |
+Occupying space:        |   [a]   |

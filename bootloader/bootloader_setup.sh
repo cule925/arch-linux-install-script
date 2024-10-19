@@ -10,14 +10,13 @@ TARGET_DISK="$(cat /tmp/archlinux-install-script-files/target_disk.txt)"
 
 echo -e "\n========>>>>>>>> ARCH-CHROOT-BOOTLOADER-SETTINGS\n"
 
-# Konfiguracija initramfsa
-if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
+# Ako je enkriptirana i Linux jezgra
+if [[ "$ENCRYPTED_BOOT" == "Y" ]]; then
 
+	SED_ENABLE_CRYPTODISK="'s/^#\\?\\s*\\(GRUB_ENABLE_CRYPTODISK=\\).*/\\1y/'"
 	arch-chroot /mnt /bin/bash <<-EOF
 
-		echo -e "\nConfiguring initramfs ...\n"
-		sed -i "s/^HOOKS=.*/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block encrypt filesystems fsck)/" /etc/mkinitcpio.conf
-		mkinitcpio -P
+		sed -i $SED_ENABLE_CRYPTODISK /etc/default/grub
 		history -c && exit
 
 	EOF
@@ -38,7 +37,6 @@ arch-chroot /mnt /bin/bash <<-EOF
 	history -c && exit
 
 EOF
-
 
 # Konfiguracija GRUB bootloadera u slučaju enkriptirane particije
 if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
@@ -62,15 +60,22 @@ if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
 	if [[ "$ENCRYPTED_BOOT" == "Y" ]]; then
 
 		# Nadogradi GRUB_SED_REGEX, dodaj mu za dekriptiranje particije i omogući GRUB-u montiranje enkriptirane ROOT particije
-		ENCRYPTED_PARTITION_KEY="$(cat $KEY_LOCATION)"
-		SED_PUT_ENCRYPTION_KEY="'s/^GRUB_CMDLINE_LINUX=\" \\([^\"]*\\)\"/GRUB_CMDLINE_LINUX=\"\\1 cryptkey=rootfs:\/etc\/cryptsetup-keys.d\/$ENCRYPTED_PARTITION_KEY \"/'"
-		SED_ENABLE_CRYPTODISK="'s/^#\\?\\s*\\(GRUB_ENABLE_CRYPTODISK=\\).*/\\1y/'"
+		KEYNAME="$MAPPED_PARTITION_NAME.key"
+		SED_PUT_ENCRYPTION_KEY_IN_GRUB_CFG="'s/^GRUB_CMDLINE_LINUX=\"\\([^\"]*\\)\"/GRUB_CMDLINE_LINUX=\"\\1 cryptkey=rootfs:\\/etc\\/cryptsetup-keys.d\\/$KEYNAME\"/'"
+		SED_PUT_ENCRYPTION_KEY_IN_MKINITCPIO_CONF_1="'s/^FILES=(\\([^)]*\\))/FILES=(\\1 \\/etc\\/cryptsetup-keys.d\\/$KEYNAME)/'"
+		SED_PUT_ENCRYPTION_KEY_IN_MKINITCPIO_CONF_2="'s/^FILES=( \\([^)]*\\))/FILES=(\\1)/'"
+
+		# Zaporka korisnika enkriptiranog diska
+		ENCRYPTED_PARTITION_PASSWORD="$(cat /tmp/archlinux-install-script-files/encrypted_partition_password.txt)"
 
 		arch-chroot /mnt /bin/bash <<-EOF
 
 			echo -e "\nConfiguring key ...\n"
-			sed -i $SED_PUT_ENCRYPTION_KEY /etc/default/grub
-			sed -i $SED_ENABLE_CRYPTODISK /etc/default/grub
+			dd bs=512 count=4 if=/dev/random iflag=fullblock | install -m 0600 /dev/stdin /etc/cryptsetup-keys.d/$KEYNAME
+			echo -e "$ENCRYPTED_PARTITION_PASSWORD\n" | cryptsetup -v luksAddKey $ENCRYPTED_PARTITION_DEV_FILE /etc/cryptsetup-keys.d/$KEYNAME
+			sed -i $SED_PUT_ENCRYPTION_KEY_IN_GRUB_CFG /etc/default/grub
+			sed -i $SED_PUT_ENCRYPTION_KEY_IN_MKINITCPIO_CONF_1 /etc/mkinitcpio.conf
+			sed -i $SED_PUT_ENCRYPTION_KEY_IN_MKINITCPIO_CONF_2 /etc/mkinitcpio.conf
 			history -c && exit
 
 		EOF
@@ -79,7 +84,21 @@ if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
 
 fi
 
-# Napravi initramfs konfiguraciju i konfiguraciju bootloadera
+# Konfiguracija i izgradnja initramfsa
+if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
+
+	arch-chroot /mnt /bin/bash <<-EOF
+
+		echo -e "\nConfiguring initramfs ...\n"
+		sed -i "s/^HOOKS=.*/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block encrypt filesystems fsck)/" /etc/mkinitcpio.conf
+		mkinitcpio -P
+		history -c && exit
+
+	EOF
+
+fi
+
+# Konfiguracija GRUB bootloadera
 arch-chroot /mnt /bin/bash <<-EOF
 
 	echo -e "\nCreating GRUB configuration ...\n"

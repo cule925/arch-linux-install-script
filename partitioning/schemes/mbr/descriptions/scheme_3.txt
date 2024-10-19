@@ -1,0 +1,6 @@
+CLEAN MBR DISK WITH BOOT AND ENCRYPTED ROOT PARTITIONS
+                        ____________________
+Role:                   |  BOOT  |  ROOT   |   [a] by choice
+Filesystem format:      | (EXT4) | (LUKS2) |
+Mount point:            |   /    |    /    |
+Occupying space:        |  512M  |   [a]   |
