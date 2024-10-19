@@ -6,7 +6,16 @@
 clean() {
 
 	echo "Cleaning up ..."
-	umount -R -q /mnt
+
+	umount -R /mnt
+
+	if [[ -e "/tmp/archlinux-install-script-files/mapped_partition_name.txt" ]]; then
+		MAPPED_PARTITION_NAME=$(cat /tmp/archlinux-install-script-files/mapped_partition_name.txt)
+		if [[ "$MAPPED_PARTITION_NAME" != "" ]]; then
+			cryptsetup close /dev/mapper/$MAPPED_PARTITION_NAME
+		fi
+	fi
+
 	rm -r /tmp/archlinux-install-script-files 2> /dev/null
 	echo -e "Done!\n"
 

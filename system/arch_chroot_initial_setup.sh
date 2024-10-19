@@ -7,11 +7,11 @@ source ./settings.txt
 
 echo -e "\n<<<<<<<<========HOSTNAME========>>>>>>>>\n"
 
-# Hostname
+# Ime računala
 read -p "What would you like to name your system? Enter: " HOSTNAME
 if [[ "$HOSTNAME" == "" ]]; then
-	echo "Hostname not set, going by default."
-	HOSTNAME_COMMAND=""
+	echo "Hostname not set, going by hostname 'arch'."
+	HOSTNAME_COMMAND="echo \"arch\" | tee /etc/hostname"
 else
 	echo "Hostname set: $HOSTNAME"
 	HOSTNAME_COMMAND="echo \"$HOSTNAME\" | tee /etc/hostname"
@@ -19,7 +19,7 @@ fi
 
 echo -e "\n<<<<<<<<=====ROOT PASSWORD======>>>>>>>>\n"
 
-# Root password
+# Zaporka korisnika root
 while true; do
 	read -s -p "Enter root password: " ROOT_PASSWORD
 	echo ""
@@ -38,7 +38,8 @@ while true; do
 done
 
 echo -e "\n<<<<<<<<==========USER==========>>>>>>>>\n"
-# Regular user
+
+# Obični korisnik
 while true; do
 	read -p "Enter new user: " USER
 	if [[ "$USER" == "" ]]; then
@@ -52,7 +53,7 @@ echo "$USER" | tee /tmp/archlinux-install-script-files/user.txt
 
 echo -e "\n<<<<<<<<========PASSWORD========>>>>>>>>\n"
 
-# User password
+# Zaporka običnog korisnika
 while true; do
 	read -s -p "Enter $USER password: " PASSWORD
 	echo ""

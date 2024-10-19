@@ -2,7 +2,7 @@
 
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/system/check_system_info.sh'"
 
-# Piše sustavske specifikacije u datoteku temp/important_specs.txt
+# Piše sustavske specifikacije u datoteku /tmp/archlinux-install-script-files/important_specs.txt
 echo -e "\n========================SYSTEM SPECS=======================\n"
 
 # Provjeri je li sustav UEFI ili BIOS

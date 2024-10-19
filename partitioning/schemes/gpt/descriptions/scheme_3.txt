@@ -1,0 +1,6 @@
+CLEAN GPT DISK WITH EFI, BOOT AND ENCRYPTED ROOT PARTITIONS
+			_____________________________
+Role:			|   EFI   |  BOOT  |  ROOT  |   [a] by choice
+Filesystem format:	| (FAT32) | (EXT4) | (EXT4) |
+Mount point:		|  /efi/  | /boot  |   /    |
+Occupying space:	|  512M   |  512M  |  [a]   |
