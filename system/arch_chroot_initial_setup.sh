@@ -2,12 +2,11 @@
 
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/system/arch_chroot_initial_setup.sh'"
 
-# Čita ./settings.txt
 source ./settings.txt
 
 echo -e "\n<<<<<<<<========HOSTNAME========>>>>>>>>\n"
 
-# Ime računala
+# Hostname
 read -p "What would you like to name your system? Enter: " HOSTNAME
 if [[ "$HOSTNAME" == "" ]]; then
 	echo "Hostname not set, going by hostname 'arch'."
@@ -19,7 +18,7 @@ fi
 
 echo -e "\n<<<<<<<<=====ROOT PASSWORD======>>>>>>>>\n"
 
-# Zaporka korisnika root
+# Root password
 while true; do
 	read -s -p "Enter root password: " ROOT_PASSWORD
 	echo ""
@@ -39,7 +38,7 @@ done
 
 echo -e "\n<<<<<<<<==========USER==========>>>>>>>>\n"
 
-# Obični korisnik
+# Regular user
 while true; do
 	read -p "Enter new user: " USER
 	if [[ "$USER" == "" ]]; then
@@ -53,7 +52,7 @@ echo "$USER" | tee /tmp/archlinux-install-script-files/user.txt
 
 echo -e "\n<<<<<<<<========PASSWORD========>>>>>>>>\n"
 
-# Zaporka običnog korisnika
+# Regular user password
 while true; do
 	read -s -p "Enter $USER password: " PASSWORD
 	echo ""

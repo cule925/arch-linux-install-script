@@ -2,7 +2,7 @@
 
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/desktop-environment/enable_environment.sh'"
 
-# Konfiguracija desktop okruženja
+# Configuring the desktop environment
 DESKTOP_ENVIRONMENT=$(cat /tmp/archlinux-install-script-files/desktop_environment.txt)
 if [[ "$DESKTOP_ENVIRONMENT" == "GNOME" ]]; then
 	arch-chroot /mnt /bin/bash <<-EOF

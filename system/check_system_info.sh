@@ -2,25 +2,24 @@
 
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/system/check_system_info.sh'"
 
-# Piše sustavske specifikacije u datoteku /tmp/archlinux-install-script-files/important_specs.txt
 echo -e "\n========================SYSTEM SPECS=======================\n"
 
-# Provjeri je li sustav UEFI ili BIOS
+# Check if system is UEFI or BIOS
 if [[ -d /sys/firmware/efi ]]; then
 	echo "SYSTEM_TYPE=UEFI" | tee /tmp/archlinux-install-script-files/important_specs.txt
 else
 	echo "SYSTEM_TYPE=BIOS" | tee /tmp/archlinux-install-script-files/important_specs.txt
 fi
 
-# Provjeri proizvođača procesora
+# Check CPU vendor
 CPU_VENDOR=$(lscpu | grep "^Vendor ID" | awk '{print $3}')
 echo "CPU_VENDOR=$CPU_VENDOR" | tee -a /tmp/archlinux-install-script-files/important_specs.txt
 
-# Provjerava arhitekturu sustava
+# Check CPU architecture
 ARCH=$(uname -m)
 echo "ARCH=$ARCH" | tee -a /tmp/archlinux-install-script-files/important_specs.txt
 
-# Provjerava proizvođača grafičkog procesora
+# Check GPU manufacturer
 GPU_INFO=$(lspci | grep -E "VGA|3D")
 
 if echo "$GPU_INFO" | grep -qi "AMD"; then
@@ -33,7 +32,7 @@ fi
 
 echo ""
 
-# Provjera zadovoljava li sustav instalacijska ograničenja
+# Check if system meets the limitations of the install script
 if [[ "$ARCH" != "x86_64" ]]; then
 	echo "Unsupported architecture: $ARCH, exiting ..."
 	exit 1

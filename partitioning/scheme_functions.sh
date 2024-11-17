@@ -4,12 +4,12 @@ is_valid_input() {
 
 	local input="$1"
 
-	# Ako je ulaz prazan
+	# If input is empty
 	if [[ -z "$input" ]]; then
 		return 0
 	fi
 
-	# Validiraj broj ako ima jedan od sufiksa K, M, G, T, P ili ga uopće nema
+	# Validate if number has sufixes like K, M, G, T, P or doesn't have a sufix
 	if [[ "$input" =~ ^[0-9]+[KkMmGgTtPp]?$ ]]; then
 		return 0
 	else
@@ -24,7 +24,7 @@ get_input() {
 	local partition="$1"
 	local size="$2"
 
-	# Pisanje veličina particije
+	# Writing the size of the partition
 	while true; do
 		read -p "Enter $partition size [size{K,M,G,T,P}]: " input
 		if is_valid_input "$input"; then

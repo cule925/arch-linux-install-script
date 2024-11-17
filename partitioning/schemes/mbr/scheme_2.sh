@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 # | | | | | | | | | | | | | | | | | |
 # v v v v v v v v v v v v v v v v v v
 
@@ -10,12 +10,12 @@ echo "Partitioning as MBR using scheme_2 (ROOT)"
 
 # ____________________________________
 # | | | | | | | | | | | | | | | | | | 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 
-# Funkcije
+# Functions
 source ./partitioning/scheme_functions.sh
 
-# Provjeri je li disk NVME
+# Check if disk is NVME
 TARGET_DISK="$(cat /tmp/archlinux-install-script-files/target_disk.txt)"
 
 if echo "$TARGET_DISK" | grep -q "nvme"; then
@@ -24,16 +24,16 @@ else
 	APPEND_P=
 fi
 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 # | | | | | | | | | | | | | | | | | |
 # v v v v v v v v v v v v v v v v v v
 
-# Particije
+# Partition
 ROOT=1
 
 ROOT_TYPE=83		# Linux
 
-# Upis veličina particija
+# Inserting the size of the partition
 while true; do
 
 	echo -e "\n***********************************************************\n"
@@ -61,12 +61,12 @@ echo -e "\n***********************************************************\n"
 
 # ____________________________________
 # | | | | | | | | | | | | | | | | | | 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 
-# Nastavi: Da ili ne?
+# Proceed: Yes or no?
 choice_yes_or_no
 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 # | | | | | | | | | | | | | | | | | |
 # v v v v v v v v v v v v v v v v v v
 
@@ -88,7 +88,7 @@ EOF
 
 echo -e "\n***********************************************************\n"
 
-# Particioniranje
+# Partitioning
 fdisk -W always $TARGET_DISK <<EOF
 o
 n
@@ -102,21 +102,21 @@ p
 w
 EOF
 
-# Ako postoji ekriptirana ROOT particija
+# Encryption options
 ENCRYPTED_ROOT="N"
 touch /tmp/archlinux-install-script-files/crypt_root.txt
 export ENCRYPTED_ROOT
 ENCRYPTED_BOOT="N"
 export ENCRYPTED_BOOT
 
-# Pisanje particija u datoteku
+# Writing the partition name into a file
 TARGET_DISK_PARTITIONS_FILE="/tmp/archlinux-install-script-files/target_disk_partitions.txt"
 
 ROOT_PARTITION_DEV_FILE="$TARGET_DISK$APPEND_P$ROOT"
 
 echo "$ROOT_PARTITION_DEV_FILE" | tee -a $TARGET_DISK_PARTITIONS_FILE > /dev/null
 
-# Formatiraj particije
+# Formating the partition
 echo -e "Formating partitions ...\n"
 
 echo "Formatting the ROOT partition ($ROOT_PARTITION_DEV_FILE):"
@@ -126,7 +126,7 @@ echo -e "\n***********************************************************\n"
 
 echo -e "Mounting partitions ...\n"
 
-# Montiranje particija
+# Mounting the partition
 echo "Mounting the ROOT partition ($ROOT_PARTITION_DEV_FILE):" 
 mount $ROOT_PARTITION_DEV_FILE /mnt
 
@@ -134,13 +134,13 @@ echo ""
 
 # ____________________________________
 # | | | | | | | | | | | | | | | | | | 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 
 lsblk -po NAME,SIZE,TYPE,MOUNTPOINTS $TARGET_DISK
 
 check_script_retval "./system/setup.sh"
 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 # | | | | | | | | | | | | | | | | | |
 # v v v v v v v v v v v v v v v v v v
 
@@ -148,6 +148,6 @@ debug "SCRIPT '{PROJECT_ROOT}/partitioning/schemes/gpt/scheme_2.sh' FINISHED EXE
 
 # ____________________________________
 # | | | | | | | | | | | | | | | | | | 
-# OVAJ DIO JE DRUGAČIJI ZA SVAKU SHEMU
+# THIS PART IS DIFFERENT FOR EVERY SCHEME
 
 exit 0

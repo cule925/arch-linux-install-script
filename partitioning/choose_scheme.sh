@@ -2,10 +2,10 @@
 
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/partitioning/choose_scheme.sh'"
 
-# Funkcije
+# Functions
 set_partitioning_style() {
 
-	# Ispitaj je li shema treba biti GPT ili MBR 
+	# Check if partition scheme needs to be GPT or MBR
 	if [[ "$SYSTEM_TYPE" == "UEFI" ]]; then
 		PARTITIONING_STYLE="gpt"
 	else
@@ -18,12 +18,12 @@ set_partitioning_style() {
 
 is_valid_number() {
 
-	# Izvuci varijable
+	# Get variables
 	local target_scheme=$1
 	local max_number=$2
 	local min_number=1
 
-	# Usporedi je li odabran ispravan broj
+	# Check if correct number was chosen
 	if echo "$target_scheme" | grep -qE '^[0-9]+$'; then
 		if (( target_scheme >= min_number && target_scheme <= max_number )); then
 			return 0
@@ -36,38 +36,36 @@ is_valid_number() {
 
 }
 
-# Čita /tmp/archlinux-install-script-files/important_specs.txt
 source /tmp/archlinux-install-script-files/important_specs.txt
 set_partitioning_style
 
-# Piše disk koji se particionira u /tmp/archlinux-install-script-files/target_disk.txt
 echo -e "\n==============CHOOSE SCHEME FOR PARTITIONING===============\n"
 
-# Dok se ne upiše ispravno ime diska ili se ne izađe iz izvođenja
+# While valid disk isn't chosen or user chose exit
 while true; do
 
 	SCHEME_DESC_FILES=$(ls $WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/)
 
-	# Broj dostupnih shema
+	# Number of partitioning schemes
 	SCHEME_NUMBER=$(echo "$SCHEME_DESC_FILES" | wc -w)
 
 	echo -e "View schemes: v\nChoose scheme: c\nQuit: q\n"
 	read -p "Choice: " INPUT_0
 	echo ""
 
-	# Ako je odabran prekid
+	# If interrupt was chosen
 	if [[ "$INPUT_0" == "q" ]]; then
 		debug "SCRIPT '{PROJECT_ROOT}/partitioning/choose_scheme.sh' FINISHED EXECUTING (CODE: 1)"
 		exit 1
 	fi
 
-	# Ako je samo stisnuta tipka Enter
+	# If only enter was pressed
 	if [[ "$INPUT_0" == "" ]]; then
 		echo -e "Selected no option!\n"
 		continue
 	fi
 
-	# Ako je odabran ispis shema
+	# If printing schemas was chosen
 	if [[ "$INPUT_0" == "v" ]]; then
 
 		while true; do
@@ -76,17 +74,17 @@ while true; do
 			read -p "Choice: " INPUT_1
 			echo ""
 
-			# Vraćanje na glavni izbornik
+			# if returning to main menu was chosen
 			if [[ "$INPUT_1" == "q" ]]; then
 				break
 			fi
 
-			# Ako je samo stisnuta tipka Enter
+			# If only enter was pressed
 			if [[ "$INPUT_1" == "" ]]; then
 				continue
 			fi
 
-			# Ako je odabran prikaz svih shema
+			# If viewing all schemas was chosen
 			if [[ "$INPUT_1" == "a" ]]; then
 
 				while true; do
@@ -95,20 +93,19 @@ while true; do
 					read -p "Choice: " INPUT_2
 					echo ""
 
-					# Vraćanje na izbornik
+					# If returning to menu was chosen
 					if [[ "$INPUT_2" == "q" ]]; then
 						break
 					fi
 
-					# Ako je samo stisnuta tipka Enter
+					# If only enter was pressed
 					if [[ "$INPUT_2" == "" ]]; then
 						continue
 					fi
 
-					# Ako je odabran kraći prikaz svih shema
+					# If viewing schemas short info was chosen
 					if [[ "$INPUT_2" == "s" ]]; then
 
-						# Ispisivanje kratkog opisa svih shema
 						echo -e "Available scheme short descriptions:"
 
 						echo -e "\n***********************************************************\n"
@@ -124,10 +121,9 @@ while true; do
 
 					fi
 
-					# Ako je odabran duži prikaz svih shema
+					# If viewing schemas long info was chosen
 					if [[ "$INPUT_2" == "l" ]]; then
 
-						# Ispisivanje kratkog opisa svih shema
 						echo -e "Available scheme descriptions:"
 						COUNTER=1
 						for INDEX in $SCHEME_DESC_FILES; do
@@ -147,7 +143,7 @@ while true; do
 
 			fi
 
-			# Ako je odabran prikaz jedne sheme
+			# If viewing one scheme was chosen
 			if is_valid_number "$INPUT_1" "$SCHEME_NUMBER"; then
 			
 				while true; do
@@ -156,20 +152,19 @@ while true; do
 					read -p "Choice: " INPUT_3
 					echo ""
 
-					# Vraćanje na izbornik
+					# If returning to menu was chosen
 					if [[ "$INPUT_3" == "q" ]]; then
 						break
 					fi
 
-					# Ako je samo stisnuta tipka Enter
+					# If only enter was pressed
 					if [[ "$INPUT_3" == "" ]]; then
 						continue
 					fi
 
-					# Ako je odabran kraći prikaz konkretne sheme
+					# If viewing a schema short info was chosen
 					if [[ "$INPUT_3" == "s" ]]; then
 
-						# Ispisivanje kratkog opisa jedne shema
 						echo -e "Selected scheme description:"
 						echo -e "\n***********************************************************\n"
 						FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/scheme_$INPUT_1.txt")
@@ -178,10 +173,9 @@ while true; do
 
 					fi
 
-					# Ako je odabran duži prikaz konkretne sheme
+					# If viewing a schema long info was chosen
 					if [[ "$INPUT_3" == "l" ]]; then
 
-						# Ispisivanje kratkog opisa jedne shema
 						echo -e "Selected scheme description:"
 						echo -e "\n["$INPUT_1"]********************************************************\n"
 						while IFS= read -r LINE; do
@@ -199,7 +193,7 @@ while true; do
 
 	fi
 
-	# Ako je odabran odabir sheme
+	# If choosing schema was chosen
 	if [[ "$INPUT_0" == "c" ]]; then
 
 		while true; do
@@ -208,17 +202,17 @@ while true; do
 			read -p "Choice: " INPUT_4
 			echo ""
 
+			# if returning to main menu was chosen
 			if [[ "$INPUT_4" == "q" ]]; then
-				# Vraćanje na glavni izbornik
 				break
 			fi
 
-			# Ako je samo stisnuta tipka Enter
+			# If only enter was pressed
 			if [[ "$INPUT_4" == "" ]]; then
 				continue
 			fi
 
-			# Ako je odabir diska validan
+			# If valid disk was chosen
 			if is_valid_number "$INPUT_4" "$SCHEME_NUMBER"; then
 				FIRST_LINE=$(head -n 1 "$WORK_DIR/partitioning/schemes/$PARTITIONING_STYLE/descriptions/scheme_$INPUT_4.txt")
 				echo -e "Target scheme chosen: ["$INPUT_4"] $FIRST_LINE"

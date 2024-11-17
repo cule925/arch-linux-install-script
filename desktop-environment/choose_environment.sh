@@ -2,11 +2,9 @@
 
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/desktop-environment/choose_environment.sh'"
 
-# Odabir desktop okruženja
-
+# Choosing the desktop environment
 read -p "Desktop environment? [no environment - 0 (default)|GNOME - 1]: " INPUT_2
 
-# Odabir desktop okruženja
 if [[ "$INPUT_2" == "1" ]]; then
 	echo "You chose GNOME!"
 	echo "GNOME" | tee /tmp/archlinux-install-script-files/desktop_environment.txt > /dev/null

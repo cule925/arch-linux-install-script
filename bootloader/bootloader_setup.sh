@@ -2,15 +2,13 @@
 
 debug "EXECUTING SCRIPT '{PROJECT_ROOT}/bootloader/bootloader_setup.sh'"
 
-# Čita /tmp/archlinux-install-script-files/important_specs.txt i 
 source /tmp/archlinux-install-script-files/important_specs.txt
 
-# Čita /tmp/archlinux-install-script-files/target_disk.txt
 TARGET_DISK="$(cat /tmp/archlinux-install-script-files/target_disk.txt)"
 
 echo -e "\n========>>>>>>>> ARCH-CHROOT-BOOTLOADER-SETTINGS\n"
 
-# Ako je enkriptirana i Linux jezgra
+# If boot is also encrypted, this is also where the Linux kernel is
 if [[ "$ENCRYPTED_BOOT" == "Y" ]]; then
 
 	SED_ENABLE_CRYPTODISK="'s/^#\\?\\s*\\(GRUB_ENABLE_CRYPTODISK=\\).*/\\1y/'"
@@ -23,7 +21,7 @@ if [[ "$ENCRYPTED_BOOT" == "Y" ]]; then
 
 fi
 
-# Instalira GRUB bootloader
+# Installs the GRUB bootloader
 if [[ "$SYSTEM_TYPE" == "UEFI" ]]; then
 	GRUB_INSTALL_COMMAND="grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=grub_uefi --recheck"
 else
@@ -38,7 +36,7 @@ arch-chroot /mnt /bin/bash <<-EOF
 
 EOF
 
-# Konfiguracija GRUB bootloadera u slučaju enkriptirane particije
+# In case of encrypted partition configure bootloader
 if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
 
 	ENCRYPTED_PARTITION_DEV_FILE="$(cat /tmp/archlinux-install-script-files/encrypted_partition.txt)"
@@ -57,15 +55,14 @@ if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
 
 	EOF
 
+	# In case of encrypted boot
 	if [[ "$ENCRYPTED_BOOT" == "Y" ]]; then
 
-		# Nadogradi GRUB_SED_REGEX, dodaj mu za dekriptiranje particije i omogući GRUB-u montiranje enkriptirane ROOT particije
 		KEYNAME="$MAPPED_PARTITION_NAME.key"
 		SED_PUT_ENCRYPTION_KEY_IN_GRUB_CFG="'s/^GRUB_CMDLINE_LINUX=\"\\([^\"]*\\)\"/GRUB_CMDLINE_LINUX=\"\\1 cryptkey=rootfs:\\/etc\\/cryptsetup-keys.d\\/$KEYNAME\"/'"
 		SED_PUT_ENCRYPTION_KEY_IN_MKINITCPIO_CONF_1="'s/^FILES=(\\([^)]*\\))/FILES=(\\1 \\/etc\\/cryptsetup-keys.d\\/$KEYNAME)/'"
 		SED_PUT_ENCRYPTION_KEY_IN_MKINITCPIO_CONF_2="'s/^FILES=( \\([^)]*\\))/FILES=(\\1)/'"
 
-		# Zaporka korisnika enkriptiranog diska
 		ENCRYPTED_PARTITION_PASSWORD="$(cat /tmp/archlinux-install-script-files/encrypted_partition_password.txt)"
 
 		arch-chroot /mnt /bin/bash <<-EOF
@@ -84,7 +81,7 @@ if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
 
 fi
 
-# Konfiguracija i izgradnja initramfsa
+# Configuring and installing initramfs
 if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
 
 	arch-chroot /mnt /bin/bash <<-EOF
@@ -98,7 +95,7 @@ if [[ "$ENCRYPTED_ROOT" == "Y" ]]; then
 
 fi
 
-# Konfiguracija GRUB bootloadera
+# Configuring the GRUB bootloader
 arch-chroot /mnt /bin/bash <<-EOF
 
 	echo -e "\nCreating GRUB configuration ...\n"
