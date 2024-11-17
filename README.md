@@ -3,8 +3,8 @@
 Projekt je potrebno preuzeti na računalo koje je pokrenulo Arch Linux ISO sliku. Ali je prije toga potrebno preuzeti alat *git*:
 
 ```
-loadkeys croat					# Ako je potrebno postaviti hrvatski raspored tipkovnice
-setfont Lat2-Terminus16				# Ako je potrebno postaviti drugi font
+loadkeys croat					# If Croatian keyboard layout is needed
+setfont Lat2-Terminus16				# If setting another font is needed, for example "Lat2-Terminus16"
 timedatectl set-timezone Europe/Zagreb
 timedatectl set-ntp true
 pacman -Syu

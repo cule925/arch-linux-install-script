@@ -136,9 +136,9 @@ TARGET_DISK_PARTITIONS_FILE="/tmp/archlinux-install-script-files/target_disk_par
 EFI_PARTITION_DEV_FILE="$TARGET_DISK$APPEND_P$EFI"
 ENCRYPTED_ROOT_PARTITION_DEV_FILE="$TARGET_DISK$APPEND_P$ROOT"
 
-# Formating the ROOT partition as a LUKS partition
 echo -e "Formating LUKS partition on ROOT:"
 
+# Formating the ROOT partition as a LUKS partition
 while true; do
 	cryptsetup -v luksFormat --pbkdf pbkdf2 "$ENCRYPTED_ROOT_PARTITION_DEV_FILE"
 	if [ $? -eq 0 ]; then
@@ -146,9 +146,9 @@ while true; do
 	fi
 done
 
-# Opening the encrypted ROOT partition
 CRYPT_NAME="cryptroot"
 
+# Opening the encrypted ROOT partition
 while true; do
 	read -s -p "Enter passphrase again to decrypt the partition: " ENCRYPTED_PARTITION_PASSWORD
 	echo $ENCRYPTED_PARTITION_PASSWORD | cryptsetup open "$ENCRYPTED_ROOT_PARTITION_DEV_FILE" "$CRYPT_NAME" > /dev/null 2>&1

@@ -148,9 +148,9 @@ while true; do
 	fi
 done
 
-# Opening the encrypted ROOT partition
 CRYPT_NAME="cryptroot"
 
+# Opening the encrypted ROOT partition
 while true; do
 	cryptsetup open "$ENCRYPTED_ROOT_PARTITION_DEV_FILE" "$CRYPT_NAME"
 	if [ $? -eq 0 ]; then

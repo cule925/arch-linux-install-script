@@ -124,9 +124,9 @@ while true; do
 	fi
 done
 
-# Opening the encrypted ROOT partition
 CRYPT_NAME="cryptroot"
 
+# Opening the encrypted ROOT partition
 while true; do
 	read -s -p "Enter passphrase again to decrypt the partition: " ENCRYPTED_PARTITION_PASSWORD
 	echo $ENCRYPTED_PARTITION_PASSWORD | cryptsetup open "$ENCRYPTED_ROOT_PARTITION_DEV_FILE" "$CRYPT_NAME" > /dev/null 2>&1
